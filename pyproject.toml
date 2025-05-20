@@ -1,0 +1,23 @@
+[tool.poetry]
+name = "jarvis-like-assistant"
+version = "0.1.0"
+description = "Edit later"
+authors = ["Vlad Bugnariu <vlad.bugnariu@gmail.com>"]
+license = "MIT"
+readme = "README.md"
+package-mode = false
+
+[tool.poetry.dependencies]
+python = "^3.8"
+pyttsx3 = "^2.98"
+speechrecognition = "3.8.1"
+pyaudio = "^0.2.14"
+pocketsphinx = "^5.0.4"
+google-api-python-client = "^2.169.0"
+google-auth-oauthlib = "^1.2.2"
+google-auth-httplib2 = "^0.2.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

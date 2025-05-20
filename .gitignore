@@ -1,0 +1,36 @@
+# Python-related
+*.pyc
+*.pyo
+*.pyd
+__pycache__/
+*.env
+
+# Virtual environments
+env/
+venv/
+.venv/
+
+# IDE-related
+.vscode/
+.idea/
+
+# PyEnv related
+.python-version
+
+# OS-generated files
+.DS_Store
+Thumbs.db
+
+# Logs and temporary files
+*.log
+*.tmp
+
+# CSV files (if you don't want to track them)
+*.csv
+
+# Ignore all CSV files in the jarvis-like-assistant directory
+*.csv
+
+# Credential files
+*.json
+*.yml
