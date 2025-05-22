@@ -120,7 +120,6 @@ The assistant activates when it hears any of the following:
 ### Commands
 - **Google Calendar**:
   - "What are my events for today?"
-  - "Show me tomorrow's schedule."
   - "What are my upcoming events?"
 - **Fun Facts**:
   - "Tell me a fun fact."

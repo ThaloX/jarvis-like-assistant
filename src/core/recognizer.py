@@ -1,7 +1,7 @@
 from importlib import import_module
 import random
 import time
-from src.core.constants import WAKE_WORDS, CALENDAR, FUNFACT, QUESTION_KEYWORD, SCHEDULE, WEATHER, TIME
+from src.core.constants import WAKE_WORDS, CALENDAR, FUNFACT, QUESTION_KEYWORD, TIME, WEATHER, TIME
 from src.core.logger import Logger
 from src.core.speech import Speech
 from src.data.commands import commands, replies, q_and_a
@@ -38,20 +38,15 @@ class Recognizer:
             message_to_speak = self.calendar_service.get_calendar_events(data.split()) # type: ignore
             self.speech.speak(message_to_speak)
 
-        def handle_schedule():
-            self.logger.info("Schedule command detected")
-            self.speech.speak("Opening schedule, Sir!")
-            # Add schedule logic here
+        def handle_time():
+            self.logger.info("Time command detected")
+            self.speech.speak("Opening time, Sir!")
+            # Add time logic here
 
         def handle_weather():
             self.logger.info("Weather command detected")
             self.speech.speak("Opening weather, Sir!")
             # Add weather logic here
-
-        def handle_time():
-            self.logger.info("Time command detected")
-            self.speech.speak("Opening time, Sir!")
-            # Add time logic here
 
         def handle_question():
             self.logger.info("Question command detected")
@@ -89,9 +84,8 @@ class Recognizer:
         # Command handler mapping
         command_handlers = [
             (lambda d: CALENDAR in d, handle_calendar),
-            (lambda d: SCHEDULE in d, handle_schedule),
-            (lambda d: WEATHER in d, handle_weather),
             (lambda d: TIME in d, handle_time),
+            (lambda d: WEATHER in d, handle_weather),
             (lambda d: QUESTION_KEYWORD in d, handle_question),
             (lambda d: FUNFACT in d, handle_funfact),
         ]
