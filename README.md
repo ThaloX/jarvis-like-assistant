@@ -80,21 +80,31 @@ A voice-activated assistant that integrates with Google Calendar, provides answe
 
 ```
 jarvis-like-assistant/
-├── jarvis-like-assistant/
+├── src/
 │   ├── main.py               # Entry point of the application
-│   ├── commands.py           # Handles commands and replies
-│   ├── recognizer.py         # Processes voice commands
-│   ├── speech.py             # Handles speech recognition and text-to-speech
-│   ├── calendar_flow.py      # Google Calendar integration
-├── user-specific/
+│   ├── core/                 # Core functionalities
+│   │   ├── recognizer.py     # Processes voice commands
+│   │   ├── speech.py         # Handles speech recognition and text-to-speech
+│   │   ├── calendar_flow.py  # Google Calendar integration
+│   │   ├── time_flow.py      # Placeholder for time-related logic
+│   ├── data/                 # Data handling
+│   │   ├── commands.py       # Handles commands and replies
+│   │   ├── utils.py          # Utility functions for CSV management
+├── user_data/                # User-specific data
 │   ├── credentials.json      # Google Calendar API credentials
 │   ├── token.json            # OAuth2 token for Google Calendar API
 │   ├── input.csv             # Commands and replies
 │   ├── q_and_a.csv           # Predefined questions and answers
-├── utils.py                  # Utility functions for CSV management
+├── tests/                    # Unit tests
+│   ├── __init__.py
+│   ├── test_commands.py      # Tests for commands module
+│   ├── test_recognizer.py    # Tests for recognizer module
+├── .vscode/
+│   ├── settings.json         # VSCode settings
 ├── .gitignore                # Git ignore file
-├── pyproject.toml            # Poetry dependencies and metadata
+├── LICENSE                   # License file
 ├── README.md                 # Project documentation
+├── pyproject.toml            # Poetry dependencies and metadata
 ```
 
 ---

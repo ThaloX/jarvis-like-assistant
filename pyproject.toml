@@ -16,6 +16,9 @@ pocketsphinx = "^5.0.4"
 google-api-python-client = "^2.169.0"
 google-auth-oauthlib = "^1.2.2"
 google-auth-httplib2 = "^0.2.0"
+colorlog = "^6.9.0"
+pytz = "^2025.2"
+tzlocal = "4.3"
 
 
 [build-system]

@@ -8,6 +8,9 @@ from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
+from src.core.logger import Logger
+
+logger = Logger(__name__).get_logger()
 
 # Constants
 TODAY = "today"
@@ -17,11 +20,12 @@ SCOPES = ['https://www.googleapis.com/auth/calendar']
 
 class CalendarService:
     def __init__(self):
+        logger.info("Initializing CalendarService")
         """
         Initialize the CalendarService by authenticating with Google Calendar API.
         """
         # Path to the credentials file 
-        user_specific_folder = Path(__file__).parent.parent / "user-specific"
+        user_specific_folder = Path(__file__).parent.parent.parent / "user_data"
         self.creds = None
         # Check if token.json file exists for storing user credentials
         if os.path.exists(Path(f'{user_specific_folder}/token.json').resolve()):
@@ -41,11 +45,14 @@ class CalendarService:
 
         try:
             self.service = build('calendar', 'v3', credentials=self.creds)
+            logger.info("Google Calendar service initialized successfully")
         except HttpError as error:
-            print(f"An error occurred: {error}")
+            logger.error("An error occurred during CalendarService initialization: %s", error)
             self.service = None
             raise
         
+        # Get system timezone
+        self.local_tz = datetime.datetime.now().astimezone().tzinfo
 
     def get_date_from_keyword(self, keyword: str) -> datetime.date:
         """
@@ -79,6 +86,7 @@ class CalendarService:
             raise ValueError("Invalid date format. Use 'day month' (e.g., '20 May').")
 
     def get_events_for_date(self, target_date: datetime.date) -> str:
+        logger.debug(f"Fetching events for date: {target_date}")
         """
         Retrieve events for a specific date from Google Calendar.
 
@@ -88,8 +96,8 @@ class CalendarService:
         Returns:
             str: A string containing the events for the specified date.
         """
-        start_of_day = datetime.datetime.combine(target_date, datetime.time.min).isoformat() + 'Z'
-        end_of_day = datetime.datetime.combine(target_date, datetime.time.max).isoformat() + 'Z'
+        start_of_day = datetime.datetime.combine(target_date, datetime.time.min, tzinfo=self.local_tz).isoformat()
+        end_of_day = datetime.datetime.combine(target_date, datetime.time.max, tzinfo=self.local_tz).isoformat()
 
         events_result = self.service.events().list( # type: ignore
             calendarId='primary',  # Use 'primary' for the main calendar
@@ -104,9 +112,11 @@ class CalendarService:
             return f"No events found for {target_date.strftime('%d %B %Y')}."
 
         event_list = [f"{event['start'].get('dateTime', event['start'].get('date'))}: {event['summary']}" for event in events]
+        logger.info(f"Events fetched for {target_date}")
         return f"Events for {target_date.strftime('%d %B %Y')}:\n" + "\n".join(event_list)
 
     def get_calendar_events(self, data: List[str]) -> str:
+        logger.debug(f"Fetching calendar events with data: {data}")
         """
         Get the calendar events for today, tomorrow, yesterday, or a specific date.
 
@@ -118,7 +128,7 @@ class CalendarService:
         """
         try:
             if NEXT in data:
-                now = datetime.datetime.now().isoformat() + 'Z'  # 'Z' indicates UTC time
+                now = datetime.datetime.now(self.local_tz).isoformat()
                 event_results = self.service.events().list( # type: ignore
                     calendarId='primary', 
                     timeMin=now, 
@@ -130,9 +140,25 @@ class CalendarService:
                 if not events:
                     return "No upcoming events found."
                 event_list = [f"{event['start'].get('dateTime', event['start'].get('date'))}: {event['summary']}" for event in events]
+                logger.info("Calendar events fetched successfully")
                 return "Upcoming events:\n" + "\n".join(event_list)
             elif TODAY in data:
-                target_date = self.get_date_from_keyword(TODAY)
+                target_date = datetime.date.today()
+                start_of_day = datetime.datetime.now(self.local_tz).isoformat()
+                end_of_day = datetime.datetime.combine(target_date, datetime.time.max, tzinfo=self.local_tz).isoformat()
+                event_results = self.service.events().list( # type: ignore
+                    calendarId='primary', 
+                    timeMin=start_of_day,
+                    timeMax=end_of_day,
+                    singleEvents=True, 
+                    orderBy="startTime"
+                ).execute() 
+                events = event_results.get('items', [])
+                if not events:
+                    return "No upcoming events found."
+                event_list = [f"{event['start'].get('dateTime', event['start'].get('date'))}: {event['summary']}" for event in events]
+                logger.info("Calendar events fetched successfully")
+                return "Upcoming events:\n" + "\n".join(event_list)
             elif TOMORROW in data:
                 target_date = self.get_date_from_keyword(TOMORROW)
             else:

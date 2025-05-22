@@ -34,3 +34,7 @@ Thumbs.db
 # Credential files
 *.json
 *.yml
+
+# Updated to reflect new structure
+user_data/*.json
+user_data/*.csv
