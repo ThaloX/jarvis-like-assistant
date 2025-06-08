@@ -36,5 +36,4 @@ Thumbs.db
 *.yml
 
 # Updated to reflect new structure
-user_data/*.json
-user_data/*.csv
+user_data/
