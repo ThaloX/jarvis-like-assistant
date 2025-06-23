@@ -11,12 +11,20 @@ class Recognizer:
         self.logger = Logger(__name__).get_logger()
         self.speech = Speech()
         self.calendar_service = None
+        self.time_service = None
+        # self.weather_service = None
 
     def lazy_load_calendar_service(self):
         if not self.calendar_service:
             self.logger.debug("Lazy loading CalendarService")
             calendar_module = import_module("src.flows.calendar_flow")
             self.calendar_service = calendar_module.CalendarService()
+    
+    def lazy_load_time_service(self):
+        if not self.time_service:
+            self.logger.debug("Lazy loading TimeService")
+            time_module = import_module("src.flows.time_flow")
+            self.time_service = time_module.TimeService()
 
     def process_command(self, data: str) -> None:
         """
@@ -39,9 +47,11 @@ class Recognizer:
             self.speech.speak(message_to_speak)
 
         def handle_time():
+            self.lazy_load_time_service()
             self.logger.info("Time command detected")
             self.speech.speak("Opening time, Sir!")
-            # Add time logic here
+            message_to_speak = self.time_service.get_time_info(data.split()) # type: ignore
+            self.speech.speak(message_to_speak)
 
         def handle_weather():
             self.logger.info("Weather command detected")

@@ -7,6 +7,7 @@ A voice-activated assistant that integrates with Google Calendar, provides answe
 ## Features
 
 ### Core Functionalities
+
 - **Speech Recognition**: Uses `speech_recognition` to capture and process voice commands.
 - **Text-to-Speech**: Uses `pyttsx3` to provide voice responses.
 - **Google Calendar Integration**:
@@ -21,6 +22,7 @@ A voice-activated assistant that integrates with Google Calendar, provides answe
   - Activates on hearing "hey assistant," "hello assistant," or "assistant."
 
 ### Utilities
+
 - **CSV Management**:
   - Sorts and organizes commands in `input.csv` by category.
   - Removes duplicate lines from CSV files.
@@ -30,29 +32,35 @@ A voice-activated assistant that integrates with Google Calendar, provides answe
 ## Installation
 
 ### Prerequisites
+
 - Python 3.8 or higher
 - Poetry for dependency management
 - A Google Cloud project with the Google Calendar API enabled
 - `credentials.json` file for Google Calendar API authentication
 
 ### Steps
+
 1. Clone the repository:
+
    ```bash
    git clone https://github.com/your-repo/jarvis-like-assistant.git
    cd jarvis-like-assistant
    ```
 
 2. Install dependencies using Poetry:
+
    ```bash
    poetry install
    ```
 
 3. Place the `credentials.json` file in the `user-specific` folder:
-   ```
+
+   ```text
    user-specific/credentials.json
    ```
 
 4. Run the application:
+
    ```bash
    poetry run python jarvis-like-assistant/main.py
    ```
@@ -62,6 +70,7 @@ A voice-activated assistant that integrates with Google Calendar, provides answe
 ## Requirements
 
 ### Python Libraries (Managed by Poetry)
+
 - `pyttsx3`: For text-to-speech functionality.
 - `speechrecognition`: For speech recognition.
 - `pyaudio`: For capturing audio input.
@@ -71,6 +80,7 @@ A voice-activated assistant that integrates with Google Calendar, provides answe
 - `google-auth-httplib2`: For HTTP transport with Google APIs.
 
 ### System Requirements
+
 - A working microphone for voice input.
 - Internet connection for Google Calendar API and online speech recognition.
 
@@ -78,7 +88,7 @@ A voice-activated assistant that integrates with Google Calendar, provides answe
 
 ## File Structure
 
-```
+```text
 jarvis-like-assistant/
 ├── src/
 │   ├── main.py               # Entry point of the application
@@ -112,12 +122,15 @@ jarvis-like-assistant/
 ## Usage
 
 ### Wake Words
+
 The assistant activates when it hears any of the following:
+
 - "hey assistant"
 - "hello assistant"
 - "assistant"
 
 ### Commands
+
 - **Google Calendar**:
   - "What are my events for today?"
   - "What are my upcoming events?"
@@ -129,6 +142,7 @@ The assistant activates when it hears any of the following:
   - "What is the capital of France?"
 
 ### CSV Management
+
 - To sort and organize commands in `input.csv`, use the `sort_by_categories` function in `utils.py`.
 - To remove duplicate lines from a file, use the `remove_duplicate_lines` function in `utils.py`.
 

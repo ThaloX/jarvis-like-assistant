@@ -7,7 +7,7 @@ logger = Logger(__name__).get_logger()
 if __name__ == "__main__":
     try:
         logger.info("Initializing commands and replies")
-        init_replies()
+        # init_replies()
 
         logger.info("Starting the recognizer")
         recognizer = Recognizer()
