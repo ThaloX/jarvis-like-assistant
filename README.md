@@ -53,16 +53,16 @@ A voice-activated assistant that integrates with Google Calendar, provides answe
    poetry install
    ```
 
-3. Place the `credentials.json` file in the `user-specific` folder:
+3. Place the `credentials.json` file in the `user_data` folder:
 
    ```text
-   user-specific/credentials.json
+   user_data/credentials.json
    ```
 
 4. Run the application:
 
    ```bash
-   poetry run python jarvis-like-assistant/main.py
+   poetry run python main.py
    ```
 
 ---
@@ -78,6 +78,7 @@ A voice-activated assistant that integrates with Google Calendar, provides answe
 - `google-api-python-client`: For Google Calendar API integration.
 - `google-auth-oauthlib`: For Google OAuth2 authentication.
 - `google-auth-httplib2`: For HTTP transport with Google APIs.
+- `colorlog`, `pytz`, `tzlocal`: For logging and timezone support.
 
 ### System Requirements
 
@@ -90,32 +91,44 @@ A voice-activated assistant that integrates with Google Calendar, provides answe
 
 ```text
 jarvis-like-assistant/
+├── main.py                        # Entry point of the application
+├── pyproject.toml                 # Poetry dependencies and metadata
+├── LICENSE                        # License file
+├── README.md                      # Project documentation
+├── .gitignore                     # Git ignore file
+├── .python-version                # Python version file
 ├── src/
-│   ├── main.py               # Entry point of the application
-│   ├── core/                 # Core functionalities
-│   │   ├── recognizer.py     # Processes voice commands
-│   │   ├── speech.py         # Handles speech recognition and text-to-speech
-│   │   ├── calendar_flow.py  # Google Calendar integration
-│   │   ├── time_flow.py      # Placeholder for time-related logic
-│   ├── data/                 # Data handling
-│   │   ├── commands.py       # Handles commands and replies
-│   │   ├── utils.py          # Utility functions for CSV management
-├── user_data/                # User-specific data
-│   ├── credentials.json      # Google Calendar API credentials
-│   ├── token.json            # OAuth2 token for Google Calendar API
-│   ├── input.csv             # Commands and replies
-│   ├── q_and_a.csv           # Predefined questions and answers
-├── tests/                    # Unit tests
 │   ├── __init__.py
-│   ├── test_commands.py      # Tests for commands module
-│   ├── test_recognizer.py    # Tests for recognizer module
-├── .vscode/
-│   ├── settings.json         # VSCode settings
-├── .gitignore                # Git ignore file
-├── LICENSE                   # License file
-├── README.md                 # Project documentation
-├── pyproject.toml            # Poetry dependencies and metadata
+│   ├── core/
+│   │   ├── __init__.py
+│   │   ├── constants.py           # Application constants (wake words, etc.)
+│   │   ├── logger.py              # Logger configuration
+│   │   ├── recognizer.py          # Processes voice commands and routes to services
+│   │   ├── speech.py              # Handles speech recognition and text-to-speech
+│   ├── data/
+│   │   ├── __init__.py
+│   │   ├── commands.py            # Handles commands, replies, and Q&A loading
+│   │   ├── utils.py               # Utility functions for CSV management
+│   ├── flows/
+│   │   ├── __init__.py
+│   │   ├── calendar_flow.py       # Google Calendar integration and logic
+│   │   ├── time_flow.py           # Time/date/week info logic
+├── user_data/
+│   ├── credentials.json           # Google Calendar API credentials (not tracked)
+│   ├── token.json                 # OAuth2 token for Google Calendar API (not tracked)
+│   ├── input.csv                  # Commands and replies (not tracked)
+│   ├── q_and_a.csv                # Predefined questions and answers (not tracked)
+├── tests/
+│   ├── test_data.py               # Tests for data/commands
+│   ├── test_logger.py             # Tests for logger
+│   ├── test_speech.py             # Tests for speech
+│   ├── test_time_flow.py          # Tests for time flow
+│   ├── test_utils.py              # Tests for utils
 ```
+
+- All core logic is under `src/`.
+- User data and credentials are stored in `user_data/` (excluded by `.gitignore`).
+- All tests are in the `tests/` directory.
 
 ---
 
@@ -148,9 +161,32 @@ The assistant activates when it hears any of the following:
 
 ---
 
+## Testing
+
+To run all tests using pytest:
+
+```bash
+# Make sure you are in the project root
+poetry run pytest
+```
+
+If you encounter import errors, set the `PYTHONPATH` to the project root:
+
+```bash
+set PYTHONPATH=%CD%
+poetry run pytest
+```
+Or in PowerShell:
+```powershell
+$env:PYTHONPATH = $PWD
+poetry run pytest
+```
+
+---
+
 ## Notes
 
-- Ensure the `credentials.json` file is correctly configured and placed in the `user-specific` folder.
+- Ensure the `credentials.json` file is correctly configured and placed in the `user_data` folder.
 - The assistant requires an active internet connection for Google Calendar API and online speech recognition.
 - You can add or modify commands and replies by editing the `input.csv` and `q_and_a.csv` files.
 
