@@ -2,11 +2,14 @@ import csv
 from operator import __and__
 from pathlib import Path
 from typing import Dict, List
+from src.core.logger import Logger
 
 # Global dictionaries for csv data
 commands: Dict[str, List[str]] = {}
 replies: Dict[str, List[str]] = {}
 q_and_a: Dict[str, str] = {}
+
+logger = Logger(__name__).get_logger()
 
 def load_csv(file_path: str) -> List[List[str]]:
     """
@@ -26,8 +29,9 @@ def init_replies() -> None:
     """
     Load user and reply data from a CSV file and store them in global dictionaries.
     """
-    data = load_csv(str(Path("user-specific/input.csv")))
-    q_a_data = load_csv(str(Path("user-specific/q_and_a.csv")))
+    logger.info("Initializing replies from CSV files")
+    data = load_csv(str(Path("user_data/input.csv")))
+    q_a_data = load_csv(str(Path("user_data/q_and_a.csv")))
 
     global commands
     global replies
@@ -54,3 +58,5 @@ def init_replies() -> None:
             q_and_a[question] = ""
 
         q_and_a[question] = answer
+
+    logger.info("Replies initialized successfully")
