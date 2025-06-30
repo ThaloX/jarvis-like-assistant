@@ -1,6 +1,9 @@
 from importlib import import_module
+import json
 import random
 import time
+
+import requests
 from src.core.constants import WAKE_WORDS, CALENDAR, FUNFACT, QUESTION_KEYWORD, TIME, WEATHER, TIME
 from src.core.logger import Logger
 from src.core.speech import Speech
@@ -12,7 +15,8 @@ class Recognizer:
         self.speech = Speech()
         self.calendar_service = None
         self.time_service = None
-        # self.weather_service = None
+        self.weather_service = None
+        self.city = None
 
     def lazy_load_calendar_service(self):
         if not self.calendar_service:
@@ -25,6 +29,24 @@ class Recognizer:
             self.logger.debug("Lazy loading TimeService")
             time_module = import_module("src.flows.time_flow")
             self.time_service = time_module.TimeService()
+    
+    def lazy_load_weather_service(self):
+        if not self.weather_service:
+            self.logger.debug("Lazy loading WeatherService")
+            weather_module = import_module("src.flows.weather_flow")
+            self.weather_service = weather_module.WeatherService()
+        
+        if not self.city:
+            try:
+                self.logger.debug("Fetching city from IP info service")
+                res = requests.get("https://ipinfo.io/", timeout=5)
+                res_dict = json.loads(res.text)
+                self.logger.debug(f"Response from IP info service: {res.status_code}: {res.text}")
+                self.city = res_dict.get("city", "Cluj-Napoca")
+            except requests.RequestException as e:
+                self.logger.error(f"Failed to fetch city from IP info service: {e}")
+                self.logger.debug("No city set, using default city")
+                self.city = "Cluj-Napoca"
 
     def process_command(self, data: str) -> None:
         """
@@ -54,9 +76,12 @@ class Recognizer:
             self.speech.speak(message_to_speak)
 
         def handle_weather():
+            self.lazy_load_weather_service()
             self.logger.info("Weather command detected")
             self.speech.speak("Opening weather, Sir!")
-            # Add weather logic here
+            message_to_speak = self.weather_service.get_weather_info(self.city) # type: ignore
+            self.speech.speak(message_to_speak)
+
 
         def handle_question():
             self.logger.info("Question command detected")
